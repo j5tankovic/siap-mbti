@@ -4,9 +4,10 @@ from preview_data import preview
 from process_data import process
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.svm import LinearSVC
+from sklearn.svm import SVC, LinearSVC
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import f1_score
-from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.model_selection import KFold, StratifiedShuffleSplit
 
 if __name__ == '__main__':
     path = sys.argv[1]
@@ -21,21 +22,47 @@ if __name__ == '__main__':
                                        max_df=0.7,
                                        min_df=0.1,
                                        lowercase=False)
+
     multinomial_nb = MultinomialNB()
+    svc = SVC(decision_function_shape='ovo')
+    rnf = RandomForestClassifier(n_estimators=10, max_depth=2)
 
     num_of_splits = 3
-    sss = StratifiedShuffleSplit(n_splits=num_of_splits)
-    final_score = 0
+    kf = KFold(n_splits=num_of_splits, shuffle=True)
+
+    final_score_nb = 0
+    final_score_svc = 0
+    final_score_rnf = 0
+
     print("Train data...")
-    for train, test in sss.split(posts, types):
+    for train, test in kf.split(posts, types):
         X_train, X_test, y_train, y_test = posts[train], posts[test], types[train], types[test]
         X_train = count_vectorizer.fit_transform(X_train)
         X_test = count_vectorizer.transform(X_test)
 
+        Naive Bayes
         multinomial_nb.fit(X_train, y_train)
-        predictions = multinomial_nb.predict(X_test)
-        score = f1_score(y_test, predictions, average='weighted')
-        final_score += score
+        nb_predictions = multinomial_nb.predict(X_test)
+        score_nb = f1_score(y_test, nb_predictions, average='weighted')
+        final_score_nb += score_nb
+
+        # SVM
+        svc.fit(X_train, y_train)
+        svc_predictions = svc.predict(X_test)
+        score_svc = f1_score(y_test, svc_predictions, average='weighted')
+        final_score_svc += score_svc
+
+        #Random Forest
+        rnf.fit(X_train, y_train)
+        rnf_predictions = rnf.predict(X_test)
+        score_rnf = f1_score(y_test, rnf_predictions, average='weighted')
+        final_score_rnf += score_rnf
+
     print('Train data finished')
-    final_score = final_score / num_of_splits
-    print(f'Final f1-score: {final_score}')
+    print('***Scores***')
+    final_score_nb = final_score_nb / num_of_splits
+    print(f'Final f1-score for Multinomial Bayes: {final_score_nb}')
+    final_score_svc = final_score_svc / num_of_splits
+    print(f'Final f1-score for SVM: {final_score_svc}')
+    final_score_rnf = final_score_rnf / num_of_splits
+    print(f'Final f1-score for Random Forest: {final_score_rnf}')
