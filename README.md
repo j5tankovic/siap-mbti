@@ -11,3 +11,7 @@
   ```pip install -U scikit-learn```
 * Pandas  
   ```pip install pandas```
+* Matplotlib  
+  ```pip install matplotlib```
+* Seaborn  
+  ```pip install seaborn```

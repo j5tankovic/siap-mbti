@@ -64,7 +64,3 @@ if __name__ == '__main__':
     #
     # train_data = [(value, key) for key, value in words_for_type.items()]
 
-    # desi se greska MemoryError. Potrebno je ispraviti
-    # classifier = nltk.NaiveBayesClassifier.train(train_data)
-
-
