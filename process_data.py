@@ -24,6 +24,7 @@ def replace_non_words(posts):
 def lemmatize(lemmatizer, posts):
     return ' '.join([lemmatizer.lemmatize(word) for word in posts.split(' ')])
 
+
 # Third step - remove stop words
 def remove_stop_words(posts, stop_words_set):
     return ' '.join([w for w in posts.split(' ') if w not in stop_words_set])
