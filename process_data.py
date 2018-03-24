@@ -1,6 +1,6 @@
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
-from nltk import word_tokenize
+from nltk import word_tokenize, PorterStemmer, bigrams
 from sklearn.preprocessing import LabelEncoder
 from scrape_url import get_yt_tags
 import numpy as np
@@ -24,6 +24,9 @@ def replace_non_words(posts):
 def lemmatize(lemmatizer, posts):
     return ' '.join([lemmatizer.lemmatize(word) for word in posts.split(' ')])
 
+# Second step - use stemmer
+def stemming(stemmer, posts):
+    return ' '.join([stemmer.stem(word) for word in posts.split(' ')])
 
 # Third step - remove stop words
 def remove_stop_words(posts, stop_words_set):
@@ -37,6 +40,8 @@ def process(data):
 
     # init lemmatizer
     lemmatizer = WordNetLemmatizer()
+    # init stemmer
+    stemmer = PorterStemmer()
     st_words = set(stopwords.words('english'))
 
     for index, row in data.iterrows():
@@ -44,7 +49,9 @@ def process(data):
         posts_temp = replace_non_words(posts)
 
         posts_temp = lemmatize(lemmatizer, posts_temp)
+        #posts_temp = stemming(stemmer, posts_temp)
         posts_temp = remove_stop_words(posts_temp, st_words)
+        #posts_temp = bigrams(posts_temp)
         type_label = label_encoder.transform([row[0]])[0]
         _types.append(type_label)
         posts_for_type.append(posts_temp)

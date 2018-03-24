@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 import itertools
 
-import matplotlib.pyplot as plt
-import seaborn
+#import matplotlib.pyplot as plt
+#import seaborn
 
 
 # def read():
@@ -115,17 +115,17 @@ def read(path):
     return pd.read_csv(path)
 
 
-def read_new():
-    df = pd.read_csv("data/mbti.csv")
-
-    # plt.figure()
-    # plt.xticks(fontsize=8)
-    # seaborn.countplot(data=df, x='type')
-    # plt.show()
-
-    data = dict([(t, []) for t in types])
-
-    for i, row in df.iterrows():
-        data[row.type].extend(row.posts.split('|||'))
-
-    return data
+# def read_new():
+#     df = pd.read_csv("data/mbti.csv")
+#
+#     # plt.figure()
+#     # plt.xticks(fontsize=8)
+#     # seaborn.countplot(data=df, x='type')
+#     # plt.show()
+#
+#     data = dict([(t, []) for t in types])
+#
+#     for i, row in df.iterrows():
+#         data[row.type].extend(row.posts.split('|||'))
+#
+#     return data
