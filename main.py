@@ -9,9 +9,8 @@ from sklearn.svm import SVC
 from sklearn.pipeline import Pipeline
 from preview_data import preview, preview_negations
 from process_data import process
+from sklearn.feature_extraction.text import TfidfVectorizer
 
-# Leksikon SentiWordNet, Vader
-# SentiWordNet, pos, neg, obj
 if __name__ == '__main__':
     print('Loading data...')
     data = pd.read_csv("data/mbti.csv")
