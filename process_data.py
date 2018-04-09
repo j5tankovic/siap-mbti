@@ -23,17 +23,23 @@ label_encoder = LabelEncoder().fit(types)
 # First step - remove all URLs from posts
 def replace_non_words(posts):
     posts = re.sub(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', '', posts)
+
     posts = re.sub(r'(?i)not|never|didn\'t|did not|don\'t|do not|no', 'NEG', posts)
+
     posts = re.sub(r'(?i)(:sad:|:crying:|</3|-.-|-_-)|(>?:\'?-?(\(+|S+|\\+))', 'NEG', posts)
     posts = re.sub(
         r'(?i)(\^_\^|\\o/|<3|:happy:|:proud:|:kiss:|crazy:|lol|rofl")|(((O|>)?(:|;)\'?-?|[xX]|=|B-?)(\)+|D+|\*+))',
         'POS', posts)
     posts = re.sub(r'(?i)(>.>|<.<|omg)|(:-?(O+|/+|P+))', 'NEU', posts)
+
     posts = re.sub("[.,:?!+]", " ", posts)
     posts = re.sub("[^a-zA-Z]", " ", posts)
     posts = re.sub(' +', ' ', posts).lower()
     return posts
 
+
+# def lemmatize(lemmatizer, posts):
+#     return ' '.join([lemmatizer.lemmatize(word) for word in posts.split(' ')])
 
 # Second step - use lemmatization
 def lemmatize(lemmatizer, posts):
@@ -92,6 +98,7 @@ def process(data):
         posts_temp = remove_stop_words(posts_temp, st_words)
         posts_temp = pos_tagger.tag(posts_temp.split())
         posts_temp = lemmatize(lemmatizer, posts_temp)
+
         type_label = label_encoder.transform([row[0]])[0]
         _types.append(type_label)
         posts_for_type.append(posts_temp)
